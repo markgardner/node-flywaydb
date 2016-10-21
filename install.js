@@ -57,7 +57,8 @@ function makeResolverFile(jlibDir) {
                 javaArgs.push('-Djava.security.egd=file:/dev/../dev/urandom');
             }
 
-            javaArgs.push(`-cp "${path.join(flywayDir, 'lib/*')}${path.delimiter}${path.join(flywayDir, 'drivers/*')}"`);
+            javaArgs.push('-cp');
+            javaArgs.push(`"${path.join(flywayDir, 'lib/*')}${path.delimiter}${path.join(flywayDir, 'drivers/*')}"`);
             javaArgs.push('org.flywaydb.commandline.Main');
 
             fs.writeFileSync(path.join(jlibDir, 'resolver.js'), `module.exports = ${JSON.stringify({
