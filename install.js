@@ -10,7 +10,6 @@ let requestProgress = require('request-progress'),
     url = require('url'),
     os = require('os'),
     fs = require('fs'),
-    glob = require('glob'),
     env = process.env;
 
 let completedSuccessfully = false,
