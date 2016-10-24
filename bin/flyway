@@ -43,11 +43,14 @@ function makeCommand(name, desc) {
 }
 
 function exeCommand(cmd) {
-    let config = require(path.resolve(program.configfile)), 
+    let cwd = process.cwd(),
+        config = require(path.resolve(program.configfile)), 
         configArgs = Object.keys(config),
+        relativeLibDirs = resolver.libDirs.map(x => path.relative(cwd, x)).join(path.delimiter),
         args;
 
-    args = resolver.args
+    args = resolver.argsPrefix
+        .concat(['-cp', relativeLibDirs, 'org.flywaydb.commandline.Main'])
         .concat([cmd._name])
         .concat(
             configArgs
@@ -56,7 +59,7 @@ function exeCommand(cmd) {
         );
 
     spawn(resolver.bin, args, {
-        cwd: process.cwd(),
+        cwd: cwd,
         stdio: 'inherit',
         windowsVerbatimArguments: true // Super Weird, https://github.com/nodejs/node/issues/5060
     });
