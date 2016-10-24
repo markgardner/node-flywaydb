@@ -51,21 +51,18 @@ downloadFlywayWithJre()
 
 function makeResolverFile(jlibDir) {
     return new Promise(function(res, rej) {
-        let javaArgs = [],
+        let argsPrefix = [],
             flywayDir = path.join(jlibDir, currentSource.folder);
 
         if(fs.existsSync(flywayDir)) {
             if(os.platform() === 'linux') {
-                javaArgs.push('-Djava.security.egd=file:/dev/../dev/urandom');
+                argsPrefix = ['-Djava.security.egd=file:/dev/../dev/urandom'];
             }
-
-            javaArgs.push('-cp');
-            javaArgs.push(`${platformParamEnclosureChar}${path.join(flywayDir, 'lib/*')}${path.delimiter}${path.join(flywayDir, 'drivers/*')}${platformParamEnclosureChar}`);
-            javaArgs.push('org.flywaydb.commandline.Main');
 
             fs.writeFileSync(path.join(jlibDir, 'resolver.js'), `module.exports = ${JSON.stringify({
                 bin: path.join(flywayDir, 'jre/bin/java'),
-                args: javaArgs
+                argsPrefix: argsPrefix,
+                libDirs: [path.join(flywayDir, 'lib/*'), path.join(flywayDir, 'drivers/*')]
             }, null, 2)};`);
 
             res();
