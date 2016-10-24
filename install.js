@@ -30,7 +30,7 @@ let completedSuccessfully = false,
             folder: 'flyway-4.0.3'
         }
     },
-    currentSource = sources[os.platform()]
+    currentSource = sources[os.platform()],
     platformParamEnclosureChar = os.platform() === 'win32' ? '"' : "'";
 
 process.once('exit', function () {
