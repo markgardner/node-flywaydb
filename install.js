@@ -3,7 +3,7 @@
 let requestProgress = require('request-progress'),
     ProgressBar = require('progress'),
     extractZip = require('extract-zip'),
-    cp = require('child_process'),
+    spawn = require('child_process').spawn,
     path = require('path'),
     request = require('request'),
     filesize = require('filesize'),
@@ -30,7 +30,8 @@ let completedSuccessfully = false,
             folder: 'flyway-4.0.3'
         }
     },
-    currentSource = sources[os.platform()];
+    currentSource = sources[os.platform()]
+    platformParamEnclosureChar = os.platform() === 'win32' ? '"' : "'";
 
 process.once('exit', function () {
   if (!completedSuccessfully) {
@@ -44,6 +45,8 @@ downloadFlywayWithJre()
     .then(makeResolverFile)
     .then(function() {
         completedSuccessfully = true;
+    }, function(err) {
+        console.log(err);
     });
 
 function makeResolverFile(jlibDir) {
@@ -57,7 +60,7 @@ function makeResolverFile(jlibDir) {
             }
 
             javaArgs.push('-cp');
-            javaArgs.push(`"${path.join(flywayDir, 'lib/*')}${path.delimiter}${path.join(flywayDir, 'drivers/*')}"`);
+            javaArgs.push(`${platformParamEnclosureChar}${path.join(flywayDir, 'lib/*')}${path.delimiter}${path.join(flywayDir, 'drivers/*')}${platformParamEnclosureChar}`);
             javaArgs.push('org.flywaydb.commandline.Main');
 
             fs.writeFileSync(path.join(jlibDir, 'resolver.js'), `module.exports = ${JSON.stringify({
@@ -85,7 +88,7 @@ function extractToJLib(compressedFlywaySource) {
         return new Promise(function(res, rej) {
             extractZip(compressedFlywaySource, { dir: extractDir }, function(err) {
                 if(err) {
-                    console.error('Error extracting zip');
+                    console.error('Error extracting zip', err);
                     rej();
                 } else {
                     res(extractDir);
@@ -94,7 +97,17 @@ function extractToJLib(compressedFlywaySource) {
         });
     } else {
         return new Promise(function(res, rej) {
-            console.log('TODO handle tar.gz');
+            spawn('tar', ['zxf', compressedFlywaySource], {
+                cwd: extractDir,
+                stdio: 'inherit'
+            }).on('close', function(code) {
+                if(code === 0) {
+                    res(extractDir);
+                } else {
+                    console.log('Untaring file failed', code);
+                    rej();
+                }
+            });
         });
     }
 }
