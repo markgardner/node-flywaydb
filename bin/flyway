@@ -7,7 +7,6 @@ let pkg = require('../package.json');
 let path = require('path');
 let spawn = require('child_process').spawn;
 let resolver = require('../jlib/resolver');
-let doubleQuoteEscaped = require('os').platform() === 'win32' ? '""' : '\\"';
 
 process.title = 'flyway';
 program
@@ -55,7 +54,7 @@ function exeCommand(cmd) {
         .concat(
             configArgs
                 .filter(x => !!config[x])
-                .map(x => `-${x}="${config[x].replace(/\"/g, doubleQuoteEscaped)}"`)
+                .map(x => `-${x}=${config[x].replace(/\s/g, '\\ ')}`)
         );
 
     spawn(resolver.bin, args, {
