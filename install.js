@@ -177,22 +177,38 @@ function downloadFlywayWithJre() {
 }
 
 function getCacheDir() {
-  let cacheDirectory = env.NPM_CACHE_DIR || env.npm_config_cache
-    , homeDirectory = env.HOME || env.HOMEPATH || env.USERPROFILE;
+    var tmpDirs = [
+            process.env.npm_config_tmp,
+            os.tmpdir(),
+            path.join(process.cwd(), 'tmp')
+        ],
+        writeAbleTmpDir = tmpDirs.find(dir => {
+            if(dir) {
+                try {
+                    dir = path.resolve(dir, 'node-flywaydb');
 
-  if (!cacheDirectory) {
-    if (homeDirectory) {
-      cacheDirectory = homeDirectory;
+                    if(!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir, '0777');
+                        fs.chmodSync(dir, '0777');
+                    }
+
+                    let tmpFile = path.join(dir, Date.now() + '.tmp');
+                    fs.writeFileSync(tmpFile, 'test');
+                    fs.unlinkSync(tmpFile);
+
+                    return true;
+                } catch(e) {
+                    console.log(dir, 'is not writable:', e);
+                }
+            }
+
+            return false;
+        });
+
+    if(writeAbleTmpDir) {
+        return path.resolve(writeAbleTmpDir, 'node-flywaydb');
     } else {
-      cacheDirectory = '/tmp';
+        console.error('Can not find a writable tmp directory.');
+        exit(1);
     }
-  }
-
-  cacheDirectory = path.join(cacheDirectory, 'node-flywaydb');
-
-  if (!fs.existsSync(cacheDirectory)) {
-    fs.mkdirSync(cacheDirectory);
-  }
-
-  return cacheDirectory;
 }
