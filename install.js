@@ -15,19 +15,19 @@ let requestProgress = require('request-progress'),
 let completedSuccessfully = false,
     sources = {
         'win32': {
-            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.3/flyway-commandline-4.0.3-windows-x64.zip',
-            filename: 'flyway-commandline-4.0.3-windows-x64.zip',
-            folder: 'flyway-4.0.3'
+            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.1.0/flyway-commandline-4.1.0-windows-x64.zip',
+            filename: 'flyway-commandline-4.1.0-windows-x64.zip',
+            folder: 'flyway-4.1'
         },
         'linux': {
-            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.3/flyway-commandline-4.0.3-linux-x64.tar.gz',
-            filename: 'flyway-commandline-4.0.3-linux-x64.tar.gz',
-            folder: 'flyway-4.0.3'
+            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.1.0/flyway-commandline-4.1.0-linux-x64.tar.gz',
+            filename: 'flyway-commandline-4.1.0-linux-x64.tar.gz',
+            folder: 'flyway-4.1.0'
         },
         'darwin': {
-            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.3/flyway-commandline-4.0.3-macosx-x64.tar.gz',
-            filename: 'flyway-commandline-4.0.3-macosx-x64.tar.gz',
-            folder: 'flyway-4.0.3'
+            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.1.0/flyway-commandline-4.1.0-macosx-x64.tar.gz',
+            filename: 'flyway-commandline-4.1.0-macosx-x64.tar.gz',
+            folder: 'flyway-4.1.0'
         }
     },
     currentSource = sources[os.platform()],
