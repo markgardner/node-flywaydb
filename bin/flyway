@@ -10,11 +10,11 @@ let resolver = require('../jlib/resolver');
 
 process.title = 'flyway';
 program
-    .version(pkg.version)
-    .option('-c, --configfile <file>', 'A javascript or json file containing configuration.')
-    .on('--help', function() {
-        console.log('  See Flyway\'s configuration options at https://flywaydb.org/documentation/commandline/');
-    });
+  .version(pkg.version)
+  .option('-c, --configfile <file>', 'A javascript or json file containing configuration.')
+  .on('--help', function () {
+    console.log('  See Flyway\'s configuration options at https://flywaydb.org/documentation/commandline/');
+  });
 
 makeCommand('migrate', 'Migrates the schema to the latest version. Flyway will create the metadata table automatically if it doesn\'t exist.');
 makeCommand('clean', 'Drops all objects (tables, views, procedures, triggers, ...) in the configured schemas. The schemas are cleaned in the order specified by the schemas property.');
@@ -35,31 +35,29 @@ makeCommand('repair', `Repairs the Flyway metadata table. This will perform the 
 program.parse(process.argv);
 
 function makeCommand(name, desc) {
-    program
-        .command(name)
-        .description(desc)
-        .action(exeCommand);
+  program
+    .command(name)
+    .description(desc)
+    .action(exeCommand);
 }
 
 function exeCommand(cmd) {
-    let cwd = process.cwd(),
-        config = require(path.resolve(program.configfile)), 
-        configArgs = Object.keys(config),
-        relativeLibDirs = resolver.libDirs.map(x => path.relative(cwd, x)).join(path.delimiter),
-        args;
+  let cwd = process.cwd(),
+    config = require(path.resolve(program.configfile)),
+    configArgs = Object.keys(config),
+    args;
 
-    args = resolver.argsPrefix
-        .concat(['-cp', relativeLibDirs, 'org.flywaydb.commandline.Main'])
-        .concat([cmd._name])
-        .concat(
-            configArgs
-                .filter(x => !!config[x])
-                .map(x => `-${x}=${config[x].replace(/\s/g, '\\ ')}`)
-        );
+  args = resolver.argsPrefix
+    .concat([cmd._name])
+    .concat(
+      configArgs
+        .filter(x => !!config[x])
+        .map(x => `-${x}=${config[x].replace(/\s/g, '\\ ')}`)
+    )
 
-    spawn(resolver.bin, args, {
-        cwd: cwd,
-        stdio: 'inherit',
-        windowsVerbatimArguments: true // Super Weird, https://github.com/nodejs/node/issues/5060
-    });
+  spawn(resolver.bin, args, {
+    cwd: cwd,
+    stdio: 'inherit',
+    windowsVerbatimArguments: true // Super Weird, https://github.com/nodejs/node/issues/5060
+  });
 }
