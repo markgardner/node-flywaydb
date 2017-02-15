@@ -77,7 +77,7 @@ request(`${repoBaseUrl}/maven-metadata.xml`, function (err, response) {
                 }
 
                 fs.writeFileSync(path.join(jlibDir, 'resolver.js'), `module.exports = ${JSON.stringify({
-                    bin: flywayDir,
+                    bin: path.join(flywayDir, 'flyway'),
                     argsPrefix: argsPrefix
                 }, null, 2)};`);
 
