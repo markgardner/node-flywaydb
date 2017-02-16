@@ -42,7 +42,7 @@ request(`${repoBaseUrl}/maven-metadata.xml`, function (err, response) {
                 folder: `flyway-${latestVersion}`
             },
             'darwin': {
-                url: `${repoBaseUrl}/${latestVersion}/${latestVersion}/flyway-commandline-${latestVersion}-macosx-x64.tar.gz`,
+                url: `${repoBaseUrl}/${latestVersion}/flyway-commandline-${latestVersion}-macosx-x64.tar.gz`,
                 filename: `flyway-commandline-${latestVersion}-macosx-x64.tar.gz`,
                 folder: `flyway-${latestVersion}`
             }
