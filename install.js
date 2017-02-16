@@ -32,17 +32,17 @@ request(`${repoBaseUrl}/maven-metadata.xml`, function (err, response) {
     let completedSuccessfully = false,
         sources = {
             'win32': {
-                url: `${repoBaseUrl}/${latestVersion}/flyway-commandline-${latestVersion}/-windows-x64.zip`,
+                url: `${repoBaseUrl}/${latestVersion}/flyway-commandline-${latestVersion}-windows-x64.zip`,
                 filename: `flyway-commandline-${latestVersion}-windows-x64.zip`,
                 folder: `flyway-${latestVersion}`
             },
             'linux': {
-                url: `${repoBaseUrl}/${latestVersion}/flyway-commandline-${latestVersion}/-linux-x64.tar.gz`,
+                url: `${repoBaseUrl}/${latestVersion}/flyway-commandline-${latestVersion}-linux-x64.tar.gz`,
                 filename: `flyway-commandline-${latestVersion}-linux-x64.tar.gz`,
                 folder: `flyway-${latestVersion}`
             },
             'darwin': {
-                url: `${repoBaseUrl}/${latestVersion}/${latestVersion}//flyway-commandline-${latestVersion}/-macosx-x64.tar.gz`,
+                url: `${repoBaseUrl}/${latestVersion}/${latestVersion}/flyway-commandline-${latestVersion}-macosx-x64.tar.gz`,
                 filename: `flyway-commandline-${latestVersion}-macosx-x64.tar.gz`,
                 folder: `flyway-${latestVersion}`
             }
