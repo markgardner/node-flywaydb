@@ -59,11 +59,15 @@ function makeResolverFile(jlibDir) {
                 argsPrefix = ['-Djava.security.egd=file:/dev/../dev/urandom'];
             }
 
-            fs.writeFileSync(path.join(jlibDir, 'resolver.js'), `module.exports = ${JSON.stringify({
-                bin: path.join(flywayDir, 'jre/bin/java'),
-                argsPrefix: argsPrefix,
-                libDirs: [path.join(flywayDir, 'lib/*'), path.join(flywayDir, 'drivers/*')]
-            }, null, 2)};`);
+            fs.writeFileSync(path.join(jlibDir, 'resolver.js'), `
+var path = require('path');
+
+module.exports = {
+  "bin": path.join(__dirname, 'flyway-4.0.3/jre/bin/java'),
+  "argsPrefix": ${JSON.stringify(argsPrefix)},
+  "libDirs": [path.join(__dirname, 'flyway-4.0.3/lib/*'), path.join(__dirname, 'flyway-4.0.3/drivers/*')]
+};
+            `);
 
             res();
         } else {
