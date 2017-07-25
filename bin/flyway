@@ -45,11 +45,17 @@ function exeCommand(cmd) {
     let cwd = process.cwd(),
         config = require(path.resolve(program.configfile)), 
         configArgs = Object.keys(config),
+        javaOpts = config.javaOpts || [],
         relativeLibDirs = resolver.libDirs.map(x => path.relative(cwd, x)).join(path.delimiter),
         args;
 
+    // Removing javaOpts now that we've saved them so they aren't included with the rest of the config.
+    configArgs = configArgs.filter(arg => arg !== 'javaOpts');
+
     args = resolver.argsPrefix
-        .concat(['-cp', relativeLibDirs, 'org.flywaydb.commandline.Main'])
+        .concat(['-cp', relativeLibDirs])
+        .concat(javaOpts)
+        .concat(['org.flywaydb.commandline.Main'])
         .concat([cmd._name])
         .concat(
             configArgs

@@ -10,24 +10,26 @@ let requestProgress = require('request-progress'),
     url = require('url'),
     os = require('os'),
     fs = require('fs'),
+    flywayVersion = '4.0.3',
+    slf4jVersion = '1.7.25',
     env = process.env;
 
 let completedSuccessfully = false,
     sources = {
         'win32': {
-            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.3/flyway-commandline-4.0.3-windows-x64.zip',
-            filename: 'flyway-commandline-4.0.3-windows-x64.zip',
-            folder: 'flyway-4.0.3'
+            url: `https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${flywayVersion}/flyway-commandline-${flywayVersion}-windows-x64.zip`,
+            filename: `flyway-commandline-${flywayVersion}-windows-x64.zip`,
+            folder: `flyway-${flywayVersion}`
         },
         'linux': {
-            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.3/flyway-commandline-4.0.3-linux-x64.tar.gz',
-            filename: 'flyway-commandline-4.0.3-linux-x64.tar.gz',
-            folder: 'flyway-4.0.3'
+            url: `https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${flywayVersion}/flyway-commandline-${flywayVersion}-linux-x64.tar.gz`,
+            filename: `flyway-commandline-${flywayVersion}-linux-x64.tar.gz`,
+            folder: `flyway-${flywayVersion}`
         },
         'darwin': {
-            url: 'https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.3/flyway-commandline-4.0.3-macosx-x64.tar.gz',
-            filename: 'flyway-commandline-4.0.3-macosx-x64.tar.gz',
-            folder: 'flyway-4.0.3'
+            url: `https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${flywayVersion}/flyway-commandline-${flywayVersion}-macosx-x64.tar.gz`,
+            filename: `flyway-commandline-${flywayVersion}-macosx-x64.tar.gz`,
+            folder: `flyway-${flywayVersion}`
         }
     },
     currentSource = sources[os.platform()],
@@ -43,6 +45,7 @@ process.once('exit', function () {
 downloadFlywayWithJre()
     .then(extractToJLib)
     .then(makeResolverFile)
+    .then(downloadSlf4jJarsToJLib)
     .then(function() {
         completedSuccessfully = true;
     }, function(err) {
@@ -109,26 +112,11 @@ function extractToJLib(compressedFlywaySource) {
     }
 }
 
-function downloadFlywayWithJre() {
-    let downloadDir = getCacheDir();
-
-    if(!currentSource) {
-        throw new Error('Your platform is not supported');
-    }
-
-    currentSource.filename = path.join(downloadDir, currentSource.filename);
-
-    if(fs.existsSync(currentSource.filename)) {
-        return Promise.resolve(currentSource.filename);
-    }
-
-    console.log('Downloading', currentSource.url);
-    console.log('Saving to', currentSource.filename);
-
+function downloadUrlToFile(url, filename) {
     return new Promise(function(resolve, reject) {
         let proxyUrl = env.npm_config_https_proxy || env.npm_config_http_proxy || env.npm_config_proxy,
             downloadOptions = {
-                uri: currentSource.url,
+                uri: url,
                 encoding: null, // Get response as a buffer
                 followRedirect: true,
                 headers: {
@@ -141,11 +129,11 @@ function downloadFlywayWithJre() {
 
         requestProgress(request(downloadOptions, function (error, response, body) {
             if (!error && response.statusCode === 200) {
-                fs.writeFileSync(currentSource.filename, body);
+                fs.writeFileSync(filename, body);
 
                 console.log('\nReceived ' + filesize(body.length) + ' total.');
 
-                resolve(currentSource.filename);
+                resolve(filename);
             } else if (response) {
                 console.error(`
     Error requesting archive.
@@ -173,6 +161,47 @@ function downloadFlywayWithJre() {
                 console.log('error', e);
             }
         });
+    });
+}
+
+function downloadFlywayWithJre() {
+    let downloadDir = getCacheDir();
+
+    if(!currentSource) {
+        throw new Error('Your platform is not supported');
+    }
+
+    currentSource.filename = path.join(downloadDir, currentSource.filename);
+
+    if(fs.existsSync(currentSource.filename)) {
+        return Promise.resolve(currentSource.filename);
+    }
+
+    console.log('Downloading', currentSource.url);
+    console.log('Saving to', currentSource.filename);
+
+    return downloadUrlToFile(currentSource.url, currentSource.filename);
+}
+
+function downloadSlf4jJarsToJLib(jlibDir) {
+    const destinationDir = path.join(__dirname, `jlib/flyway-${flywayVersion}/lib`),
+          apiFilename = path.join(destinationDir, `slf4j-api-${slf4jVersion}.jar`),
+          implFilename = path.join(destinationDir, `slf4j-jdk14-${slf4jVersion}.jar`),
+          apiUrl = `http://repo1.maven.org/maven2/org/slf4j/slf4j-api/${slf4jVersion}/slf4j-api-${slf4jVersion}.jar`,
+          implUrl = `http://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/${slf4jVersion}/slf4j-jdk14-${slf4jVersion}.jar`;
+
+    if(fs.existsSync(apiFilename) && fs.existsSync(implFilename)) {
+        return Promise.resolve(jlibDir);
+    }
+
+    console.log('Downloading', apiUrl);
+    console.log('Saving to', apiFilename);
+
+    return downloadUrlToFile(apiUrl, apiFilename).then(function () {
+        console.log('Downloading', implUrl);
+        console.log('Saving to', implFilename);
+
+        return downloadUrlToFile(implUrl, implFilename);
     });
 }
 
