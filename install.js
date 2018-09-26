@@ -126,7 +126,13 @@ function downloadFlywayWithJre() {
     console.log('Saving to', currentSource.filename);
 
     return new Promise(function(resolve, reject) {
-        let proxyUrl = env.npm_config_https_proxy || env.npm_config_http_proxy || env.npm_config_proxy,
+        let proxyUrl = env.npm_config_https_proxy ||
+                        env.npm_config_proxy ||
+                        env.npm_config_http_proxy ||
+                        env.HTTPS_PROXY ||
+                        env.https_proxy ||
+                        env.HTTP_PROXY ||
+                        env.http_proxy;
             downloadOptions = {
                 uri: currentSource.url,
                 encoding: null, // Get response as a buffer
