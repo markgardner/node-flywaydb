@@ -46,7 +46,8 @@ function exeCommand(cmd) {
         config = require(path.resolve(program.configfile)), 
         configArgs = Object.keys(config),
         relativeLibDirs = resolver.libDirs.map(x => path.relative(cwd, x)).join(path.delimiter),
-        args;
+        args,
+        child;
 
     args = resolver.argsPrefix
         .concat(['-cp', relativeLibDirs, 'org.flywaydb.commandline.Main'])
@@ -57,9 +58,13 @@ function exeCommand(cmd) {
                 .map(x => `-${x}=${config[x].replace(/\s/g, '\\ ')}`)
         );
 
-    spawn(resolver.bin, args, {
+    child = spawn(resolver.bin, args, {
         cwd: cwd,
         stdio: 'inherit',
         windowsVerbatimArguments: true // Super Weird, https://github.com/nodejs/node/issues/5060
+    });
+
+    child.on('close', code => {
+        process.exit(code);
     });
 }
