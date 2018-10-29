@@ -132,7 +132,7 @@ function downloadFlywayWithJre() {
                         env.HTTPS_PROXY ||
                         env.https_proxy ||
                         env.HTTP_PROXY ||
-                        env.http_proxy;
+                        env.http_proxy,
             downloadOptions = {
                 uri: currentSource.url,
                 encoding: null, // Get response as a buffer
