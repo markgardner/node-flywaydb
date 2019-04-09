@@ -11,4 +11,4 @@ I found myself wanting to use flyway on my build systems and dreading installing
 }
 ```
 
-See [Example config file for inspiration](example_config.js)
+See [Example config file for inspiration](sample/config.js)

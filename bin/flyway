@@ -2,11 +2,11 @@
 
 'use strict';
 
-let program = require('commander');
-let pkg = require('../package.json');
-let path = require('path');
-let spawn = require('child_process').spawn;
-let resolver = require('../jlib/resolver');
+const program = require('commander');
+const pkg = require('../package.json');
+const path = require('path');
+const spawn = require('child_process').spawn;
+const download = require('../lib/download');
 
 process.title = 'flyway';
 program
@@ -41,30 +41,41 @@ function makeCommand(name, desc) {
         .action(exeCommand);
 }
 
-function exeCommand(cmd) {
-    let cwd = process.cwd(),
-        config = require(path.resolve(program.configfile)), 
-        configArgs = Object.keys(config),
-        relativeLibDirs = resolver.libDirs.map(x => path.relative(cwd, x)).join(path.delimiter),
-        args,
-        child;
+function configFlywayArgs(config) {
+    const flywayArgs = config.flywayArgs || {};
+    const flywayArgsKeys = Object.keys(flywayArgs);
 
-    args = resolver.argsPrefix
-        .concat(['-cp', relativeLibDirs, 'org.flywaydb.commandline.Main'])
-        .concat([cmd._name])
-        .concat(
-            configArgs
-                .filter(x => !!config[x])
-                .map(x => `-${x}=${config[x].replace(/\s/g, '\\ ')}`)
-        );
-
-    child = spawn(resolver.bin, args, {
-        cwd: cwd,
-        stdio: 'inherit',
-        windowsVerbatimArguments: true // Super Weird, https://github.com/nodejs/node/issues/5060
+    return flywayArgsKeys.map(function(key) {
+        return `-${key}=${flywayArgs[key]}`;
     });
+}
 
-    child.on('close', code => {
-        process.exit(code);
+function exeCommand(cmd) {
+    if(!program.configfile) {
+        throw new Error('Config file option is required');
+    }
+
+    const config = require(path.resolve(program.configfile));
+
+    download.ensureArtifacts(config, function(err, flywayBin) {
+        const workingDir = process.cwd();
+
+        if(err) {
+            throw new Error(err);
+        }
+
+        const args = configFlywayArgs(config)
+            .concat([cmd._name]);
+
+        const child = spawn(flywayBin, args, {
+            env: Object.assign({}, process.env, config.env),
+            cwd: workingDir,
+            stdio: 'inherit',
+            windowsVerbatimArguments: true // Super Weird, https://github.com/nodejs/node/issues/5060
+        });
+
+        child.on('close', code => {
+            process.exit(code);
+        });
     });
 }
