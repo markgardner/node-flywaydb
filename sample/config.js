@@ -22,5 +22,8 @@ module.exports = {
         groupId: 'org.slf4j',
         artifactId: 'slf4j-jdk14',
         version: '1.7.25'
-    }]
+    }],
+    downloads: {
+        expirationTimeInMs: -1,
+    }
 };
