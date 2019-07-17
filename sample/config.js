@@ -24,6 +24,7 @@ module.exports = {
         version: '1.7.25'
     }],
     downloads: {
-        expirationTimeInMs: -1,
+        storageDirectory: '/var/test', // optional, the specific directory to store the flyway downloaded files. The directory must be writable by the node app process' user.
+        expirationTimeInMs: -1, // optional, -1 will never check for updates, defaults to 1 day.
     }
 };
