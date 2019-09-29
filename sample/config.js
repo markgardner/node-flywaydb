@@ -5,7 +5,7 @@ module.exports = {
         locations: 'filesystem:sample/sql',
         user: 'postgres',
         password: 'example',
-        sqlMigrationSuffix: '.pgsql',
+        sqlMigrationSuffixes: '.pgsql',
     },
     // Use to configure environment variables used by flyway
     env: {
