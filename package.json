@@ -1,6 +1,6 @@
 {
   "name": "node-flywaydb",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "NodeJs wrapper for flywaydb cli",
   "main": "index.js",
   "bin": {
@@ -27,6 +27,7 @@
     "xml2js": "^0.4.22"
   },
   "devDependencies": {
+    "minimist": ">=1.2.2",
     "eslint": "^6.4.0"
   }
 }
