@@ -55,7 +55,11 @@ function exeCommand(cmd) {
         throw new Error('Config file option is required');
     }
 
-    const config = require(path.resolve(program.configfile));
+    var config = require(path.resolve(program.configfile));
+
+    if (typeof config === 'function') {
+        config = config();
+    }
 
     download.ensureArtifacts(config, function(err, flywayBin) {
         const workingDir = process.cwd();
