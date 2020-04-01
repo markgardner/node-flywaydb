@@ -6,12 +6,13 @@ module.exports = {
         user: 'postgres',
         password: 'example',
         sqlMigrationSuffixes: '.pgsql',
+        baselineOnMigrate: true,
     },
     // Use to configure environment variables used by flyway
     env: {
         JAVA_ARGS: '-Djava.util.logging.config.file=./conf/logging.properties',
     },
-    version: '4.0.3', // optional, empty or missing will download the latest
+    version: '6.3.2', // optional, empty or missing will download the latest
     mavinPlugins: [{ // optional, use to add any plugins (ie. logging)
         groupId: 'org.slf4j',
         artifactId: 'slf4j-api',
