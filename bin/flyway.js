@@ -9,14 +9,12 @@ const spawn = require('child_process').spawn;
 const download = require('../lib/download');
 
 process.title = 'flyway';
-
 program
-.version(pkg.version)
-.option('-c, --configfile <file>', 'A javascript or json file containing configuration.')
-.on('--help', function() {
-    console.log('  See Flyway\'s configuration options at https://flywaydb.org/documentation/commandline/');
-});
-// console.log(program)
+    .version(pkg.version)
+    .option('-c, --configfile <file>', 'A javascript or json file containing configuration.')
+    .on('--help', function() {
+        console.log('  See Flyway\'s configuration options at https://flywaydb.org/documentation/commandline/');
+    });
 
 makeCommand('migrate', 'Migrates the schema to the latest version. Flyway will create the metadata table automatically if it doesn\'t exist.');
 makeCommand('clean', 'Drops all objects (tables, views, procedures, triggers, ...) in the configured schemas. The schemas are cleaned in the order specified by the schemas property.');
