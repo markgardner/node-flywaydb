@@ -4,7 +4,7 @@
   "description": "NodeJs wrapper for flywaydb cli",
   "main": "index.js",
   "bin": {
-    "flyway": "./bin/flyway"
+    "flyway": "./bin/flyway.js"
   },
   "repository": {
     "type": "git",
