@@ -1,3 +1,5 @@
+This is a fork of Mark Gardner's project (https://github.com/markgardner/node-flywaydb). All credit is to him for this project. I found my Windows Machine defaulting to use of WSH instead of node when trying to execute the flyway command because of a lack of the .js extension in the original project. The following is written by the original author, Mark Gardner.
+
 # node-flywaydb
 NodeJs wrapper for [flywaydb cli](https://flywaydb.org/documentation/commandline/)
 
