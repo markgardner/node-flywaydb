@@ -1,7 +1,7 @@
 {
-  "name": "node-flywaydb",
+  "name": "@jlredd/node-flywaydb",
   "version": "3.0.1",
-  "description": "NodeJs wrapper for flywaydb cli",
+  "description": "NodeJs wrapper for flywaydb cli. All credit goes to Mark Gardner.",
   "main": "index.js",
   "bin": {
     "flyway": "./bin/flyway.js"
