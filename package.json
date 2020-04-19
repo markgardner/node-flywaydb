@@ -1,5 +1,5 @@
 {
-  "name": "@jlredd/node-flywaydb",
+  "name": "@john.redd/node-flywaydb",
   "version": "3.0.1",
   "description": "NodeJs wrapper for flywaydb cli. All credit goes to Mark Gardner.",
   "main": "index.js",
