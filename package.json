@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/markgardner/node-flywaydb.git"
+    "url": "git+https://github.com/jlredd/node-flywaydb.git"
   },
   "keywords": [
     "flyway",
@@ -17,9 +17,9 @@
   "author": "Mark Gardner",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/markgardner/node-flywaydb/issues"
+    "url": "https://github.com/jlredd/node-flywaydb/issues"
   },
-  "homepage": "https://github.com/markgardner/node-flywaydb#readme",
+  "homepage": "https://github.com/jlredd/node-flywaydb#readme",
   "dependencies": {
     "commander": "^5.0.0",
     "extract-zip": "^2.0.0",
