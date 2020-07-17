@@ -1,6 +1,6 @@
 {
   "name": "node-flywaydb",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "NodeJs wrapper for flywaydb cli",
   "main": "index.js",
   "bin": {
