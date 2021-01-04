@@ -15,7 +15,7 @@ module.exports = function() {
             JAVA_ARGS: '-Djava.util.logging.config.file=./conf/logging.properties',
         },
         version: '6.3.2', // optional, empty or missing will download the latest
-        mavinPlugins: [{ // optional, use to add any plugins (ie. logging)
+        mavenPlugins: [{ // optional, use to add any plugins (ie. logging)
             groupId: 'org.slf4j',
             artifactId: 'slf4j-api',
             version: '1.7.25',
