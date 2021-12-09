@@ -1,0 +1,11 @@
+node_modules
+
+# dirs
+sample/
+
+# linters and other style configs
+.eslintrc.js
+.editorconfig
+
+# docker
+docker-compose.yml
