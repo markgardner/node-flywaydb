@@ -58,7 +58,7 @@ function binIsFile(path) {
     return !!stats && stats.isFile();
 }
 
-function exeCommand(cmd) {
+async function exeCommand(cmd) {
     if(!program.configfile) {
         throw new Error('Config file option is required');
     }
@@ -66,7 +66,7 @@ function exeCommand(cmd) {
     var config = require(path.resolve(program.configfile));
 
     if (typeof config === 'function') {
-        config = config();
+        config = await Promise.resolve(config());
     }
 
     download.ensureArtifacts(config, function(err, flywayBin) {
