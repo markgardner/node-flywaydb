@@ -9,12 +9,14 @@ module.exports = function() {
             password: 'example',
             sqlMigrationSuffixes: '.pgsql',
             baselineOnMigrate: true,
+
         },
         // Use to configure environment variables used by flyway
         env: {
             JAVA_ARGS: '-Djava.util.logging.config.file=./conf/logging.properties',
         },
         version: '6.3.2', // optional, empty or missing will download the latest
+        localJava: false, // optional, if true use locally installed java, with false is used bundled JRE from flyway cmd, flyway cmd doesn't have bundled JRE for architectures like armv6
         mavenPlugins: [{ // optional, use to add any plugins (ie. logging)
             groupId: 'org.slf4j',
             artifactId: 'slf4j-api',
