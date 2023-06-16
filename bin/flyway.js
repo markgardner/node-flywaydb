@@ -7,6 +7,7 @@ const pkg = require('../package.json');
 const exeCommand = require('../lib/exec').exeCommand
 
 
+
 process.title = 'flyway';
 program
     .version(pkg.version)
@@ -37,5 +38,5 @@ function makeCommand(name, desc) {
     program
         .command(name)
         .description(desc)
-        .action(exeCommand);
+        .action(exeCommand(program.configfile));
 }
