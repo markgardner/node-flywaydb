@@ -44,6 +44,7 @@ function makeCommand(name, desc) {
 }
 
 function cliExec(cmd) {
+  console.log(cmd);
   if(!program.configfile) {
     throw new Error('Config file option is required');
   }
@@ -53,5 +54,5 @@ function cliExec(cmd) {
   if (typeof config === 'function') {
       config = config();
   }
-  return exeCommand(config, cmd);
+  return exeCommand(config, cmd).then(code => process.exit(code));
 }
