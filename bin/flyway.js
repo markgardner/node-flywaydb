@@ -5,6 +5,7 @@
 const program = require('commander');
 const pkg = require('../package.json');
 const exeCommand = require('../lib/exec').exeCommand
+const path = require('path');
 
 
 
@@ -15,6 +16,7 @@ program
     .on('--help', function() {
         console.log('  See Flyway\'s configuration options at https://flywaydb.org/documentation/commandline/');
     });
+
 
 makeCommand('migrate', 'Migrates the schema to the latest version. Flyway will create the metadata table automatically if it doesn\'t exist.');
 makeCommand('clean', 'Drops all objects (tables, views, procedures, triggers, ...) in the configured schemas. The schemas are cleaned in the order specified by the schemas property.');
@@ -38,5 +40,18 @@ function makeCommand(name, desc) {
     program
         .command(name)
         .description(desc)
-        .action(exeCommand(program.configfile));
+        .action(cliExec);
+}
+
+function cliExec(cmd) {
+  if(!program.configfile) {
+    throw new Error('Config file option is required');
+  }
+
+  var config = require(path.resolve(program.configfile));
+
+  if (typeof config === 'function') {
+      config = config();
+  }
+  return exeCommand(config, cmd);
 }
