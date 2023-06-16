@@ -44,7 +44,6 @@ function makeCommand(name, desc) {
 }
 
 function cliExec(cmd) {
-  console.log(cmd);
   if(!program.configfile) {
     throw new Error('Config file option is required');
   }
